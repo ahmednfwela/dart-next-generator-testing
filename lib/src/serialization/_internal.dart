@@ -3,3 +3,5 @@ export 'xml_reflection.dart';
 
 export 'json_extensions.dart';
 export 'xml_extensions.dart';
+
+export 'parameter_serialization.dart';

@@ -1,15 +1,20 @@
 part of 'pets_api.dart';
 
 class PetsApiGetPetsRequest {
-  static Uri url = Uri(path: '/pets');
-  static String method = getMethod;
+  static const urlPathTemplate = r'/pets';
+  static const method = r'GET';
 
+  final Map<String, String> extraHeaders;
+  final Map<String, Object /* String | List<String> */> extraQueryParameters;
+  // Add path, query, header, cookie parameters here.
   final int skip;
   final int limit;
 
-  const PetsApiGetPetsRequest({
+  PetsApiGetPetsRequest({
     this.skip = 0,
     required this.limit,
+    this.extraHeaders = const {},
+    this.extraQueryParameters = const {},
   });
 
   Future<Uri> getResolvedUri({

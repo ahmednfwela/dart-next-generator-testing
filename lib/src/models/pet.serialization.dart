@@ -15,24 +15,35 @@ Map<String, dynamic> _$PetToJson(Pet instance) => {
             ),
           ),
         ),
-      )
+      ),
+      ...instance.additionalProperties.map((key, value) {
+        try {
+          return MapEntry(key, value.toJson());
+        } on NoSuchMethodError {
+          return MapEntry(key, value);
+        }
+      }),
     };
 
 Pet _$PetFromJson(Map<String, dynamic> src) {
+  final $reflection = Pet.$jsonReflection;
   return Pet.$all(
     imageBytes: src
         .getOrUndefinedMapped(
-          Pet.$jsonReflection.imageBytes.oasName,
+          $reflection.imageBytes.oasName,
           (v) => v as String?,
         )
         .map((v) => v == null ? null : base64.decode(v)),
     name1: src.getRequiredMapped(
-      Pet.$jsonReflection.name1.oasName,
+      $reflection.name1.oasName,
       (v) => v as String,
     ),
-    name2: src.getRequiredMapped('name2', (v) => v as String?),
-    name3: src.getOrUndefinedMapped('name3', (v) => v as String),
-    name4: src.getOrUndefinedMapped('name4', (v) => v as String?),
+    name2:
+        src.getRequiredMapped($reflection.name2.oasName, (v) => v as String?),
+    name3:
+        src.getOrUndefinedMapped($reflection.name3.oasName, (v) => v as String),
+    name4: src.getOrUndefinedMapped(
+        $reflection.name4.oasName, (v) => v as String?),
     childPets: src.getOrUndefinedMapped(
       'childPets',
       (v) => (v as List)
@@ -48,6 +59,10 @@ Pet _$PetFromJson(Map<String, dynamic> src) {
                 .toList(),
           )
           .toList(),
+    ),
+    additionalProperties: AdditionalProperties.srcExcept(
+      src,
+      $reflection.members.map((e) => e.oasName).toSet(),
     ),
   );
 }
@@ -168,11 +183,16 @@ Pet _$PetFromXml(XmlElement src) {
       // TODO
       (v) => [],
     ),
+    //not supported in XML ?
+    additionalProperties: AdditionalProperties(),
   );
 }
 
 Status _$StatusFromJson(Object? src) {
-  return Status.values.firstWhere((v) => v.jsonReflection.oasValue == src);
+  if (src is! String) {
+    throw 'Value $src is not a valid enum';
+  }
+  return Status(src);
 }
 
 Object? _$StatusToJson(Status src) {

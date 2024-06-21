@@ -37,6 +37,21 @@ mixin PetMixin {
   /// Nullable: false
   /// Required: false
   UndefinedWrapper<List<List<List<Pet>>>> get childPets;
+
+  /// There can only be a single additionalProperties per class
+  AdditionalProperties<dynamic> get additionalProperties;
+}
+
+extension type const AdditionalProperties<T>._(Map<String, T> src)
+    implements Map<String, dynamic> {
+  const AdditionalProperties([Map<String, T> src = const {}]) : this._(src);
+  factory AdditionalProperties.srcExcept(
+    Map<String, T> src,
+    Set<String> toRemove,
+  ) =>
+      AdditionalProperties(
+        Map.fromEntries(src.entries.where((e) => !toRemove.contains(e.key))),
+      );
 }
 
 //one of a,b
@@ -65,6 +80,9 @@ class Pet with PetMixin {
   @override
   UndefinedWrapper<List<List<List<Pet>>>> childPets;
 
+  @override
+  AdditionalProperties additionalProperties;
+
   /// Use the `all` constructor when creating a new instance of this class in
   /// deserialization or copyWith operations.
   Pet.$all({
@@ -74,6 +92,7 @@ class Pet with PetMixin {
     required this.name3,
     required this.name4,
     required this.childPets,
+    required this.additionalProperties,
   });
 
   Pet({
@@ -83,6 +102,7 @@ class Pet with PetMixin {
     this.name3 = const UndefinedWrapper.undefined(),
     this.name4 = const UndefinedWrapper.undefined(),
     this.childPets = const UndefinedWrapper.undefined(),
+    this.additionalProperties = const AdditionalProperties(),
   });
 
   // ====== JSON ======
@@ -102,23 +122,20 @@ class Pet with PetMixin {
   factory Pet.fromXml(XmlElement src) => _$PetFromXml(src);
 }
 
-enum Status {
-  ready(
-    jsonReflection: StatusJsonReflection.ready,
-    xmlReflection: StatusXmlReflection.ready,
-  );
+extension type const Status._(String src) {
+  const Status.ready() : this._(r'ready');
+  const Status.notReady() : this._(r'notReady');
+  factory Status.$safe(String src) {
+    final res = values.where((element) => element.src == src).firstOrNull;
+    if (res == null) {
+      throw 'Invalid enum value $src';
+    }
+    return res;
+  }
+  const Status.$unsafe(String src) : this._(src);
 
-  const Status({
-    required this.jsonReflection,
-    required this.xmlReflection,
-  });
-
-  final JsonEnumMemberReflection jsonReflection;
-  final XmlEnumMemberReflection xmlReflection;
-
-  Object? toJson() => _$StatusToJson(this);
-  static Status fromJson(Object? src) => _$StatusFromJson(src);
-
-  XmlText toXml() => _$StatusToXml(this);
-  static Status fromXml(XmlText src) => _$StatusFromXml(src);
+  static const List<Status> values = [
+    Status.ready(),
+    Status.notReady(),
+  ];
 }
