@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:openapi_petstore/_internal.dart';
 import 'package:xml/xml.dart';
-
+import 'package:http_parser/http_parser.dart' as $http;
 part 'pets_api.models.dart';
 
 class PetsApi {

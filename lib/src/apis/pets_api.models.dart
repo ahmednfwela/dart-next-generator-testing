@@ -5,12 +5,12 @@ class PetsApiGetPetsRequest {
   static const method = r'GET';
 
   final Map<String, String> extraHeaders;
-  final Map<String, Object /* String | List<String> */> extraQueryParameters;
+  final Map<String, Object /* String | List<String> */ > extraQueryParameters;
   // Add path, query, header, cookie parameters here.
   final int skip;
   final int limit;
 
-  PetsApiGetPetsRequest({
+  const PetsApiGetPetsRequest({
     this.skip = 0,
     required this.limit,
     this.extraHeaders = const {},
@@ -24,11 +24,11 @@ class PetsApiGetPetsRequest {
     return baseUrl.replace(
       pathSegments: [
         ...baseUrl.pathSegments,
-        ...url.pathSegments,
+        // ...url.pathSegments,
       ],
       queryParameters: {
         ...baseUrl.queryParameters,
-        ...url.queryParameters,
+        // ...url.queryParameters,
         'skip': skip.toString(),
         'limit': limit.toString(),
       },
@@ -87,6 +87,8 @@ class PetsApiGetPetsRequestApplicationJson extends PetsApiGetPetsRequest {
   Stream<List<int>> getResolvedBody({
     Map<String, dynamic> context = const {},
   }) async* {
+    final mimeType = $http.MediaType.parse('application/json');
+    mimeType.toString();
     yield utf8.encode(jsonEncode(pets.map((v) => v.toJson()).toList()));
   }
 }
@@ -101,17 +103,17 @@ class PetsApiGetPetsResponse {
     Map<String, dynamic> context = const {},
   }) async {
     Future<String> getStringResponse() async {
-      final charset = response.normalizedCharset;
-      if (charset == null) {
-        // non-text response is wanted
-        throw 'non text response is not supported';
-      }
-      final decoded = await Encoding.getByName(charset)
-          ?.decodeStream(response.bodyBytesStream);
-      if (decoded == null) {
-        throw 'decoding bytes into charset $charset failed';
-      }
-      return decoded;
+      // final charset = response.normalizedCharset;
+      // if (charset == null) {
+      //   // non-text response is wanted
+      //   throw 'non text response is not supported';
+      // }
+      // final decoded = await Encoding.getByName(charset)
+      //     ?.decodeStream(response.bodyBytesStream);
+      // if (decoded == null) {
+      //   throw 'decoding bytes into charset $charset failed';
+      // }
+      // return decoded;
     }
 
     if (OASNetworkingUtils.matchesStatusCodePattern(

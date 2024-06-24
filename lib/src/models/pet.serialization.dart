@@ -192,18 +192,17 @@ Status _$StatusFromJson(Object? src) {
   if (src is! String) {
     throw 'Value $src is not a valid enum';
   }
-  return Status(src);
+  return Status.$safe(src);
 }
 
 Object? _$StatusToJson(Status src) {
-  return src.jsonReflection.oasValue;
+  return src.src;
 }
 
 Status _$StatusFromXml(XmlNode src) {
-  return Status.values
-      .firstWhere((v) => v.xmlReflection.oasValue == src.innerText);
+  return Status.$safe(src.innerText);
 }
 
 XmlText _$StatusToXml(Status src) {
-  return XmlText(src.xmlReflection.oasValue);
+  return XmlText(src.src);
 }

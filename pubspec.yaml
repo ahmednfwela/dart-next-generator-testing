@@ -16,6 +16,7 @@ dependencies:
     path: shared_infrastructure
   meta: ^1.15.0
   std_uritemplate: ^1.0.1
+  http_parser: ^4.1.0
   
 
 dev_dependencies:
